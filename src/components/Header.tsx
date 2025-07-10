@@ -1,4 +1,6 @@
-import { NavLink, useLocation, useEffect } from 'react-router'
+import { NavLink, useLocation, useNavigate } from 'react-router'
+import { useEffect, useState } from 'react'
+import Button from '@/components/Button'
 
 const navigations = [
   {
@@ -24,7 +26,20 @@ const navigations = [
 ]
 
 export default function Header() {
-  const token = localStorage.getItem('token')
+  const [token, setToken] = useState<string | null>(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    setToken(localStorage.getItem('token'))
+  }, [location])
+
+  function signOut() {
+    localStorage.removeItem('token')
+    navigate('/')
+    window.location.reload()
+  }
+
   return (
     <header>
       <nav className="flex items-center gap-2">
@@ -34,6 +49,9 @@ export default function Header() {
               key={nav.to}
               to={nav.to}
               end={true}
+              style={{
+                display: nav.to === '/signin' && token ? 'none' : 'block'
+              }}
               className={({ isActive }) => {
                 return isActive ? 'text-red-500' : 'text-black'
               }}>
@@ -41,6 +59,7 @@ export default function Header() {
             </NavLink>
           )
         })}
+        {token && <Button onClick={signOut}>로그아웃</Button>}
       </nav>
     </header>
   )
