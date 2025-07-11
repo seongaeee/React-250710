@@ -20,6 +20,10 @@ const navigations = [
     label: 'Batman'
   },
   {
+    to: '/todos',
+    label: 'Todos'
+  },
+  {
     to: '/signin',
     label: 'SignIn'
   }
